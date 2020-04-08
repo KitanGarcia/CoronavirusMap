@@ -1,6 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import L from 'leaflet';
+import axios from 'axios';
 
 
 import Layout from 'components/Layout';
@@ -26,6 +27,23 @@ const IndexPage = () => {
    */
 
   async function mapEffect({ leafletElement: map} = {}) {
+    let response;
+
+    try {
+      response = await axios.get('https://corona.lmao.ninja/countries');
+    }
+    catch (e) {
+      console.log(`Failed to fetch countries": ${e.message}`, e);
+      return;
+    }
+
+    //destructure response.
+    //Equivalent to const data = response.data;
+    const {data = []} = response;
+
+    //data is now a list of countries as below:
+    //[{"country":"USA","countryInfo":{"_id":840,"iso2":"US","iso3":"USA","lat":38,"long":-97,"flag":"https://raw.githubusercontent.com/NovelCOVID/API/master/assets/flags/us.png"},"updated":1586326293551,"cases":400540,"todayCases":205,"deaths":12857,"todayDeaths":16,"recovered":21711,"active":365972,"critical":9169,"casesPerOneMillion":1210,"deathsPerOneMillion":39,"tests":2082431,"testsPerOneMillion":6291}, ...]
+    console.log(data);
   }
 
   const mapSettings = {
