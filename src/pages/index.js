@@ -10,8 +10,8 @@ import Map from 'components/Map';
 
 
 const LOCATION = {
-  lat: 38.9072,
-  lng: -77.0369
+  lat: 0,
+  lng: 0
 };
 const CENTER = [LOCATION.lat, LOCATION.lng];
 const DEFAULT_ZOOM = 2;
@@ -122,7 +122,74 @@ const IndexPage = () => {
 }
     */
 
+//adding geoJson data to the map so Leaflet can understand
+  const geoJsonLayers = new L.GeoJSON(geoJson, {
+    //customizes the map layer Leaflet creates for the map
+    pointToLayer: (feature = {}, latlng) => {
+
+      //properties = features.properties
+      const { properties = {} } = feature;
+      let updatedFormatted;
+      let casesString;
+
+      //country, updated, cases, deaths, recovered = properties.country...
+      const {
+        country,
+        updated,
+        cases,
+        deaths,
+        recovered
+      } = properties;
+
+      casesString = `${cases}`;
+
+      //show 1k+ if over 1000
+      if (cases > 1000) {
+        casesString = `${casesString.slice(0, -3)}k+`;
+      }
+
+      //if there is an updated date, format it as a date in this timezone
+      if (updated) {
+        updatedFormatted = new Date(updated).toLocaleString();
+      }
+
+      //this is the map marker
+      //tooltip is what appears on hover
+      const html = `
+        <span class = "icon-marker">
+          <span class = "icon-marker-tooltip">
+            <h2>${country}</h2>
+            <ul>
+              <li><strong>Confirmed: </strong> ${cases} </li>
+              <li><strong>Deaths: </strong> ${deaths} </li>
+              <li><strong>Recovered: </strong> ${recovered} </li>
+              <li><strong>Last Update:: </strong> ${updatedFormatted} </li>
+            </ul>
+          </span>
+          ${casesString}
+        </span>
+        `;
+
+      return L.marker(latlng, {
+        icon: L.divIcon({
+          className: 'icon',
+          html
+        }),
+        //makes it surface above other markers when hovered
+        riseOnHover: true
+      });
+    }
+  });
+
+  geoJsonLayers.addTo(map);
+
+
+
   }
+
+
+
+
 
   const mapSettings = {
     center: CENTER,
