@@ -9,7 +9,7 @@
     "gatsby-plugin-react-leaflet": "2.0.12",
     "gatsby-plugin-resolve-src": "^2.0.0",
     "gatsby-plugin-sass": "^2.2.1",
-    "gatsby-source-filesystem": "^2.2.2",
+    "gatsby-source-filesystem": "^5.11.0",
     "leaflet": "^1.6.0",
     "node-sass": "^9.0.0",
     "path": "^0.12.7",
